@@ -1,70 +1,74 @@
-# Getting Started with Create React App
+# MindSight — AI-Assisted Mental Health Companion
+
+[![React](https://img.shields.io/badge/React-18.x-blue)](https://reactjs.org/)  
+[![License: MIT](https://img.shields.io/badge/License-MIT-green)](https://opensource.org/licenses/MIT)  
+[![Version](https://img.shields.io/badge/version-1.0.0-blueviolet)]()
+
+**MindSight** is an AI-powered mental health platform designed to help users **monitor, assess, and improve their mental well-being**. It leverages AI to analyze user symptoms, provide personalized guidance, and connect users with healthcare professionals.
+
+---
+
+## 🌟 Features
+
+- **Symptom Tracking & Analysis**  
+  - Users can enter their symptoms via chat or input forms.  
+  - Multiple AI based tools will be integrated for the analysis.
+  - Data from AI based tools will be re-validated   before displaying   the results.
+  - AI calculates a **severity score** based on the symptoms and re-validation which will be automated.  
+  - Personalized advice is generated according to the score.
+  - Clinician will be recommended based on symptoms.
+  - Data will be analyzed for enhancing the product efficiency
+
+- **Screening Results**  
+  - View mental health assessment results.  
+  - Scores categorized into severity levels (low, moderate, high).  
+  - Tailored recommendations and guidance.
+
+- **User Data Dashboard**  
+  - Track historical symptoms, scores, and advice.  
+  - Provides a clear overview of mental health trends over time.
+
+- **Doctor & Clinician Booking**  
+  - Browse available doctors and healthcare professionals.  
+  - View reviews and ratings from other users.  
+  - Book consultations or chat directly with healthcare providers.
+
+- **Interactive Chat**  
+  - Users can talk with AI to log symptoms and get instant guidance.  
+  - Integrated with screening functionality for a seamless experience.
+
+
+---
+
+## 🔧 Technologies we have Chosed
+
+- **Frontend:** React, Material-UI (MUI), Redux, TypeScript
+- **Backend:** Node.js / Express , Natural Language Processing Algorithms, Open sourced LLMS 
+- **AI Integration:** Custom AI for symptom analysis, re-correction Logics
+- **State Management:** React Hooks, Context API , Redux
+- **Data Management:** PostgreSQL, MongoDB, etc.)  
+---
+
+## 🏗 Future Enhancements
+
+- Real-time notifications for upcoming appointments.  
+- Integration with wearable devices for health tracking.  
+- Enhanced AI for predictive mental health analysis.  
+- Secure user authentication and HIPAA-compliant data storage.
+
+## 🚀 Getting Started
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+### Prerequisites
 
-In the project directory, you can run:
+- Node.js >= 18.x  
+- npm or yarn
 
-### `npm start`
+### Installation
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+```bash
+git clone https://github.com/yourusername/mindsight.git
+cd mindsight
+npm install
+npm start
