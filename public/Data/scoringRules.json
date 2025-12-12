@@ -1,0 +1,69 @@
+{
+  "rules": [
+    {
+      "keywords": ["suicidal", "die", "suicide", "kill", "rape", "murder" , "poison", "fire","kill myself", "end my life", "i want to die", "wish i was dead", "life is pointless"],
+      "score": 100
+    },
+    {
+      "keywords": ["self-harm", "cutting", "poisoning", "gun shot","hurting myself", "harm myself"],
+      "score": 90
+    },
+
+    {
+      "keywords": ["panic", "panic attack", "can't breathe", "breathing fast", "heart racing", "i am dying", "about to faint"],
+      "score": 95
+    },
+    {
+      "keywords": ["anxious", "anxiety", "worried", "fearful", "nervous", "shaking", "trembling"],
+      "score": 75
+    },
+
+    {
+      "keywords": ["depressed", "hopeless", "empty", "numb", "worthless", "low mood", "no motivation"],
+      "score": 80
+    },
+    {
+      "keywords": ["crying a lot", "sad all the time", "feeling lost", "lonely"],
+      "score": 60
+    },
+    {
+      "keywords": ["stress", "stressed", "overwhelmed", "burnout", "exhausted"],
+      "score": 60
+    },
+
+    {
+      "keywords": ["flashbacks", "intrusive thoughts", "nightmares", "trauma", "triggered"],
+      "score": 85
+    },
+
+    {
+      "keywords": ["racing thoughts", "can't stop thinking", "mind won't slow down"],
+      "score": 70
+    },
+
+    {
+      "keywords": ["isolated", "withdrawn", "avoiding people"],
+      "score": 55
+    },
+
+    {
+      "keywords": ["tired", "fatigue", "exhausted", "weak"],
+      "score": 40
+    },
+
+    {
+      "keywords": ["insomnia", "can't sleep", "sleeping too much", "bad sleep"],
+      "score": 45
+    },
+
+    {
+      "keywords": ["frustrated", "irritable", "angry"],
+      "score": 50
+    },
+
+    {
+      "keywords": ["fine", "okay", "whatever"],
+      "score": 10
+    }
+  ]
+}
