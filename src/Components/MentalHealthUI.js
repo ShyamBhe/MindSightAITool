@@ -13,7 +13,6 @@ import QuickStart from "./QuickStart";
 import ScreeningResults from "./ScreeningResults";
 import ChatHelper from "./ChatHelper";
 import BookingDialog from "./BookingDialog";
-import ClinicianList from "./ClinicianList";
 
 export default function MentalHealthUI() {
   const [view, setView] = useState("home");
@@ -30,7 +29,7 @@ export default function MentalHealthUI() {
   const [scoringRules, setScoringRules] = useState([]);
 
   useEffect(() => {
-    fetch("/data/scoringRules.json")
+    fetch("/Data/scoringRules.json")
       .then(res => res.json())
       .then(data => setScoringRules(data.rules || []))
       .catch(err => console.error("Failed to load scoring rules", err));
@@ -198,42 +197,49 @@ export default function MentalHealthUI() {
       </AppBar>
 
       <Container sx={{ flex: 1, mt: 4 }}>
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={8}>
-            {view === "home" && <QuickStart runQuickScreening={runQuickScreening} setView={setView} />}
-            {view === "results" && (
-              <ScreeningResults
-                screeningScore={screeningScore}
-                advice={advice}
-                openReviewDoctor={openReviewDoctor}
-                setSelectedDoctor={setSelectedDoctor}
-                toggleReviews={toggleReviews}
-              />
-            )}
-          </Grid>
+  <Grid container spacing={3}>
+    <Grid size={{ xs: 12, md: 8 }}>
+      {view === "home" && (
+        <QuickStart runQuickScreening={runQuickScreening} setView={setView} />
+      )}
 
-          
-        </Grid>
-      </Container>
+      {view === "results" && (
+        <>
+          <ScreeningResults
+            screeningScore={screeningScore}
+            advice={advice}
+            openReviewDoctor={openReviewDoctor}
+            setSelectedDoctor={setSelectedDoctor}
+            toggleReviews={toggleReviews}
+          />
+          <Box sx={{ mt: 3 }}>
+            <Button variant="outlined" onClick={() => setView("home")}>Back to Home</Button>
+          </Box>
+        </>
+      )}
+    </Grid>
+  </Grid>
+</Container>
 
-      <ChatHelper
-        chatOpen={chatOpen}
-        setChatOpen={setChatOpen}
-        messages={messages}
-        input={input}
-        setInput={setInput}
-        sendMessage={sendMessage}
-      />
+<ChatHelper
+  chatOpen={chatOpen}
+  setChatOpen={setChatOpen}
+  messages={messages}
+  input={input}
+  setInput={setInput}
+  sendMessage={sendMessage}
+/>
 
-      <BookingDialog
-        selectedDoctor={selectedDoctor}
-        setSelectedDoctor={setSelectedDoctor}
-        bookingTime={bookingTime}
-        setBookingTime={setBookingTime}
-      />
+<BookingDialog
+  selectedDoctor={selectedDoctor}
+  setSelectedDoctor={setSelectedDoctor}
+  bookingTime={bookingTime}
+  setBookingTime={setBookingTime}
+/>
+
 
       <Box component="footer" sx={{ textAlign: "center", p: 2, color: "text.secondary", mt: "auto", bgcolor: "#f1f3f4" }}>
-        Prototype UI — not for clinical use. Replace mock logic with validated clinical models and legal review before deployment.
+        Prototype UI — not for clinical use. Under development.
       </Box>
     </Box>
   );
