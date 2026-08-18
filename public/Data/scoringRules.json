@@ -1,69 +1,421 @@
 {
   "rules": [
     {
-      "keywords": ["suicidal", "die", "suicide", "kill", "rape", "murder" , "poison", "fire","kill myself", "end my life", "i want to die", "wish i was dead", "life is pointless"],
+      "category": "suicide_imminent",
+      "severity": "critical",
+      "keywords": [
+        "kill myself",
+        "end my life",
+        "take my own life",
+        "i want to die",
+        "i am going to kill myself",
+        "i'm going to kill myself",
+        "planning to kill myself",
+        "ready to die",
+        "i don't want to live anymore",
+        "i do not want to live anymore",
+        "there is no reason to live",
+        "better off dead",
+        "everyone would be better without me",
+        "goodbye forever",
+        "this is my last day",
+        "this is my last message"
+      ],
       "score": 100
     },
     {
-      "keywords": ["self-harm", "cutting", "poisoning", "gun shot","hurting myself", "harm myself"],
-      "score": 90
-    },
-
-    {
-      "keywords": ["panic", "panic attack", "can't breathe", "breathing fast", "heart racing", "i am dying", "about to faint"],
+      "category": "suicidal_thoughts",
+      "severity": "critical",
+      "keywords": [
+        "suicidal",
+        "suicidal thoughts",
+        "thinking about suicide",
+        "thinking of suicide",
+        "thinking about dying",
+        "wish i was dead",
+        "wish i could die",
+        "don't want to wake up",
+        "do not want to wake up",
+        "life is not worth living",
+        "life is pointless",
+        "no reason to live",
+        "want everything to end"
+      ],
       "score": 95
     },
     {
-      "keywords": ["anxious", "anxiety", "worried", "fearful", "nervous", "shaking", "trembling"],
-      "score": 75
+      "category": "self_harm",
+      "severity": "critical",
+      "keywords": [
+        "hurt myself",
+        "harm myself",
+        "cut myself",
+        "cutting myself",
+        "self harm",
+        "self-harm",
+        "burn myself",
+        "injure myself",
+        "punish myself",
+        "make myself bleed",
+        "i want to hurt myself"
+      ],
+      "score": 95
     },
-
     {
-      "keywords": ["depressed", "hopeless", "empty", "numb", "worthless", "low mood", "no motivation"],
+      "category": "violence_imminent",
+      "severity": "critical",
+      "keywords": [
+        "kill him",
+        "kill her",
+        "kill them",
+        "i will kill",
+        "i'm going to kill",
+        "i am going to kill",
+        "i want to murder",
+        "i will murder",
+        "shoot him",
+        "shoot her",
+        "shoot them",
+        "stab him",
+        "stab her",
+        "stab them",
+        "hurt someone",
+        "hurt somebody",
+        "attack someone",
+        "attack them",
+        "beat him up",
+        "beat her up",
+        "i want revenge",
+        "make them pay"
+      ],
+      "score": 100
+    },
+    {
+      "category": "violent_anger",
+      "severity": "high",
+      "keywords": [
+        "i might hurt someone",
+        "i could hurt someone",
+        "losing control",
+        "can't control my anger",
+        "cannot control my anger",
+        "violent thoughts",
+        "thoughts of hurting someone",
+        "want to punch someone",
+        "want to hit someone",
+        "extremely angry",
+        "full of rage",
+        "furious",
+        "rage",
+        "revenge"
+      ],
+      "score": 85
+    },
+    {
+      "category": "sexual_violence_or_abuse",
+      "severity": "critical",
+      "keywords": [
+        "i was raped",
+        "someone raped me",
+        "sexual assault",
+        "sexually assaulted",
+        "sexual abuse",
+        "sexually abused",
+        "forced me to have sex",
+        "forced sex",
+        "molested",
+        "being abused",
+        "domestic violence",
+        "partner hits me",
+        "partner beats me",
+        "someone is threatening me"
+      ],
+      "score": 95
+    },
+    {
+      "category": "psychosis_possible",
+      "severity": "high",
+      "keywords": [
+        "hearing voices",
+        "voices in my head",
+        "voices are talking to me",
+        "voices tell me",
+        "seeing things that aren't there",
+        "seeing things that are not there",
+        "people are watching me",
+        "someone is controlling my thoughts",
+        "my thoughts are being controlled",
+        "people can read my mind",
+        "someone is following me",
+        "everyone is plotting against me"
+      ],
+      "score": 90
+    },
+    {
+      "category": "severe_disorientation",
+      "severity": "high",
+      "keywords": [
+        "don't know where i am",
+        "do not know where i am",
+        "don't know who i am",
+        "do not know who i am",
+        "very confused",
+        "completely confused",
+        "losing touch with reality",
+        "nothing feels real",
+        "the world doesn't feel real"
+      ],
+      "score": 85
+    },
+    {
+      "category": "mania_possible",
+      "severity": "high",
+      "keywords": [
+        "haven't slept for days",
+        "have not slept for days",
+        "don't need sleep",
+        "do not need sleep",
+        "too much energy",
+        "unlimited energy",
+        "mind is extremely fast",
+        "thoughts are extremely fast",
+        "i feel unstoppable",
+        "i can do anything",
+        "spending uncontrollably",
+        "taking huge risks"
+      ],
       "score": 80
     },
     {
-      "keywords": ["crying a lot", "sad all the time", "feeling lost", "lonely"],
-      "score": 60
-    },
-    {
-      "keywords": ["stress", "stressed", "overwhelmed", "burnout", "exhausted"],
-      "score": 60
-    },
-
-    {
-      "keywords": ["flashbacks", "intrusive thoughts", "nightmares", "trauma", "triggered"],
+      "category": "panic_attack",
+      "severity": "high",
+      "keywords": [
+        "panic attack",
+        "having a panic attack",
+        "can't breathe",
+        "cannot breathe",
+        "struggling to breathe",
+        "breathing very fast",
+        "hyperventilating",
+        "heart racing",
+        "heart pounding",
+        "about to faint",
+        "feel like i'm dying",
+        "feel like i am dying",
+        "losing control",
+        "terrified suddenly"
+      ],
       "score": 85
     },
-
     {
-      "keywords": ["racing thoughts", "can't stop thinking", "mind won't slow down"],
+      "category": "severe_depression",
+      "severity": "high",
+      "keywords": [
+        "hopeless",
+        "completely hopeless",
+        "worthless",
+        "feel worthless",
+        "nothing matters anymore",
+        "nothing will ever get better",
+        "there is no hope",
+        "can't go on",
+        "cannot go on",
+        "life has no meaning",
+        "i hate myself",
+        "everyone hates me",
+        "i am a burden"
+      ],
+      "score": 80
+    },
+    {
+      "category": "depression",
+      "severity": "moderate",
+      "keywords": [
+        "depressed",
+        "depression",
+        "empty",
+        "emotionally numb",
+        "feeling numb",
+        "low mood",
+        "no motivation",
+        "lost interest",
+        "nothing interests me",
+        "don't enjoy anything",
+        "do not enjoy anything",
+        "crying every day",
+        "sad all the time",
+        "constant sadness"
+      ],
       "score": 70
     },
-
     {
-      "keywords": ["isolated", "withdrawn", "avoiding people"],
+      "category": "trauma",
+      "severity": "high",
+      "keywords": [
+        "flashbacks",
+        "having flashbacks",
+        "intrusive memories",
+        "traumatic memories",
+        "trauma",
+        "nightmares about what happened",
+        "reliving what happened",
+        "triggered by memories",
+        "can't stop remembering what happened",
+        "cannot stop remembering what happened"
+      ],
+      "score": 75
+    },
+    {
+      "category": "severe_anxiety",
+      "severity": "moderate_high",
+      "keywords": [
+        "extreme anxiety",
+        "severe anxiety",
+        "constant anxiety",
+        "terrified",
+        "constant fear",
+        "can't calm down",
+        "cannot calm down",
+        "shaking uncontrollably",
+        "trembling badly",
+        "feeling overwhelmed by fear"
+      ],
+      "score": 70
+    },
+    {
+      "category": "anxiety",
+      "severity": "moderate",
+      "keywords": [
+        "anxious",
+        "anxiety",
+        "worried",
+        "very worried",
+        "fearful",
+        "nervous",
+        "uneasy",
+        "restless",
+        "on edge",
+        "overthinking",
+        "can't stop worrying",
+        "cannot stop worrying"
+      ],
       "score": 55
     },
-
     {
-      "keywords": ["tired", "fatigue", "exhausted", "weak"],
-      "score": 40
+      "category": "obsessive_or_intrusive_thoughts",
+      "severity": "moderate_high",
+      "keywords": [
+        "intrusive thoughts",
+        "unwanted thoughts",
+        "disturbing thoughts",
+        "thoughts i can't control",
+        "thoughts i cannot control",
+        "can't stop thinking",
+        "cannot stop thinking",
+        "mind won't stop",
+        "mind will not stop",
+        "racing thoughts",
+        "thoughts keep repeating"
+      ],
+      "score": 65
     },
-
     {
-      "keywords": ["insomnia", "can't sleep", "sleeping too much", "bad sleep"],
-      "score": 45
-    },
-
-    {
-      "keywords": ["frustrated", "irritable", "angry"],
+      "category": "burnout_overwhelm",
+      "severity": "moderate",
+      "keywords": [
+        "burnout",
+        "burned out",
+        "burnt out",
+        "overwhelmed",
+        "can't cope",
+        "cannot cope",
+        "too much pressure",
+        "mentally exhausted",
+        "emotionally exhausted",
+        "completely drained",
+        "stressed out",
+        "extremely stressed"
+      ],
       "score": 50
     },
-
     {
-      "keywords": ["fine", "okay", "whatever"],
-      "score": 10
+      "category": "social_isolation",
+      "severity": "moderate",
+      "keywords": [
+        "completely alone",
+        "feel alone",
+        "feeling lonely",
+        "lonely",
+        "isolated",
+        "socially isolated",
+        "avoiding everyone",
+        "avoiding people",
+        "don't want to see anyone",
+        "do not want to see anyone",
+        "withdrawn",
+        "no one cares about me"
+      ],
+      "score": 45
+    },
+    {
+      "category": "sleep_problem",
+      "severity": "low_moderate",
+      "keywords": [
+        "insomnia",
+        "can't sleep",
+        "cannot sleep",
+        "bad sleep",
+        "poor sleep",
+        "sleeping too much",
+        "sleeping all day",
+        "waking up constantly",
+        "keep waking up",
+        "difficulty sleeping"
+      ],
+      "score": 35
+    },
+    {
+      "category": "fatigue",
+      "severity": "low",
+      "keywords": [
+        "tired",
+        "very tired",
+        "fatigue",
+        "fatigued",
+        "low energy",
+        "no energy",
+        "exhausted",
+        "drained"
+      ],
+      "score": 25
+    },
+    {
+      "category": "irritability",
+      "severity": "low_moderate",
+      "keywords": [
+        "frustrated",
+        "irritable",
+        "annoyed",
+        "angry",
+        "easily irritated",
+        "short tempered",
+        "losing patience"
+      ],
+      "score": 30
+    },
+    {
+      "category": "minor_distress",
+      "severity": "low",
+      "keywords": [
+        "bad day",
+        "feeling down",
+        "a little sad",
+        "slightly worried",
+        "a bit anxious",
+        "not feeling great",
+        "having a difficult day"
+      ],
+      "score": 20
     }
   ]
 }
