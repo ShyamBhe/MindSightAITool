@@ -1,373 +1,59 @@
-import {
-  Paper,
-  Typography,
-  Box,
-  Chip,
-  Divider,
-} from "@mui/material";
-
+import React from "react";
+import { Paper, Typography, Box, Chip, Divider, Button, CircularProgress } from "@mui/material";
 import ClinicianList from "./ClinicianList";
+import CrisisCard from "./CrisisCard";
+import { titleCase, severityColor } from "../format";
 
-export default function ScreeningResults({
-  screeningScore,
-  screeningCategory,
-  screeningSeverity,
-  matchedRules = [],
-  advice = [],
-  openReviewDoctor,
-  setSelectedDoctor,
-  toggleReviews,
-}) {
+const FOCUS_TO_TOPIC = { anxiety: "anxiety", depression: "depression", sleep: "sleep", burnout: "stress" };
+const CATEGORY_FOCUS = { panic_attack: "anxiety", severe_anxiety: "anxiety", anxiety: "anxiety", severe_depression: "depression", depression: "depression", social_isolation: "depression", sleep_problem: "sleep", burnout_overwhelm: "burnout" };
 
-  /*
-  ---------------------------------------------------------
-  FORMAT CATEGORY NAME
-  ---------------------------------------------------------
-  Example:
-  severe_anxiety -> Severe Anxiety
-  sleep_problem  -> Sleep Problem
-  ---------------------------------------------------------
-  */
-  const formatCategory = (category) => {
-    if (!category || category === "no_detected_rule") {
-      return "No specific category detected";
-    }
-
-    return category
-      .replaceAll("_", " ")
-      .replace(/\b\w/g, (letter) =>
-        letter.toUpperCase()
-      );
-  };
-
-
-  /*
-  ---------------------------------------------------------
-  FORMAT SEVERITY
-  ---------------------------------------------------------
-  Example:
-  moderate_high -> Moderate High
-  low_moderate  -> Low Moderate
-  ---------------------------------------------------------
-  */
-  const formatSeverity = (severity) => {
-    if (!severity || severity === "none") {
-      return "None";
-    }
-
-    return severity
-      .replaceAll("_", " ")
-      .replace(/\b\w/g, (letter) =>
-        letter.toUpperCase()
-      );
-  };
-
-
-  /*
-  ---------------------------------------------------------
-  SEVERITY BADGE
-  ---------------------------------------------------------
-  Uses the severity coming directly from JSON,
-  rather than recreating severity from score.
-  ---------------------------------------------------------
-  */
-  const renderSeverityBadge = () => {
-    if (!screeningSeverity) {
-      return null;
-    }
-
-    let color = "default";
-
-    if (screeningSeverity === "critical") {
-      color = "error";
-    } else if (screeningSeverity === "high") {
-      color = "error";
-    } else if (screeningSeverity === "moderate_high") {
-      color = "warning";
-    } else if (screeningSeverity === "moderate") {
-      color = "warning";
-    } else if (
-      screeningSeverity === "low_moderate"
-    ) {
-      color = "info";
-    } else if (screeningSeverity === "low") {
-      color = "success";
-    }
-
-    return (
-      <Chip
-        label={formatSeverity(screeningSeverity)}
-        color={color}
-        size="small"
-      />
-    );
-  };
-
+export default function ScreeningResults({ result, clinicians, loadingClinicians, onBook, onOpenGuides }) {
+  if (!result) {
+    return <Paper sx={{ p: 3 }}><Typography color="text.secondary">No screening result yet. Please describe how you are feeling in the chat first.</Typography></Paper>;
+  }
+  const { score, category, severity, matches, advice, crisis } = result;
+  const topics = [...new Set(matches.map((m) => FOCUS_TO_TOPIC[CATEGORY_FOCUS[m.category]]).filter(Boolean))];
 
   return (
-    <Paper
-      sx={{
-        p: 3,
-        borderRadius: 2,
-      }}
-    >
-
-      {/* ------------------------------------------------
-          TITLE
-      ------------------------------------------------ */}
-      <Typography
-        variant="h5"
-        sx={{
-          mb: 3,
-          fontWeight: 600,
-        }}
-      >
-        Screening Results
+    <Paper sx={{ p: 3, borderRadius: 2 }}>
+      <Typography variant="h5" sx={{ mb: 2, fontWeight: 600 }}>Screening results</Typography>
+      <CrisisCard crisis={crisis} />
+      <Box sx={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: 2, mb: 1 }}>
+        <Chip label={severity === "none" ? "No concern detected" : `${titleCase(severity)} concern`} color={severityColor(severity)} />
+        <Typography variant="h6">{category === "no_detected_rule" ? "No specific pattern detected" : titleCase(category)}</Typography>
+      </Box>
+      <Typography variant="caption" color="text.secondary">
+        Automated screening based on your conversation (indicative score {score}/100). It is not a diagnosis. Analysis: {result.source === "rules" ? "rule-based" : "AI + rule-based safety check"}.
       </Typography>
+      <Divider sx={{ my: 3 }} />
 
-
-      {/* ------------------------------------------------
-          PRIMARY RESULT
-      ------------------------------------------------ */}
-      {screeningScore !== null ? (
-        <Box>
-
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              flexWrap: "wrap",
-              gap: 2,
-              mb: 2,
-            }}
-          >
-
-            {/* SCORE */}
-            <Box>
-              <Typography
-                variant="h3"
-                sx={{
-                  fontWeight: 600,
-                }}
-              >
-                {screeningScore}
-              </Typography>
-
-              <Typography
-                variant="caption"
-                color="text.secondary"
-              >
-                Rule-based screening score
-              </Typography>
+      {matches.length > 0 && (
+        <Box sx={{ mb: 3 }}>
+          <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>Detected patterns</Typography>
+          {matches.map((m) => (
+            <Box key={m.category} sx={{ display: "flex", gap: 1, alignItems: "center", mb: 0.5, flexWrap: "wrap" }}>
+              <Typography variant="body2" sx={{ fontWeight: 600 }}>{titleCase(m.category)}</Typography>
+              <Chip size="small" variant="outlined" label={titleCase(m.severity)} />
+              {m.matchedKeywords?.length > 0 && <Typography variant="caption" color="text.secondary">matched: {m.matchedKeywords.join(", ")}</Typography>}
             </Box>
-
-
-            {/* SEVERITY */}
-            {renderSeverityBadge()}
-
-          </Box>
-
-
-          {/* CATEGORY */}
-          <Typography
-            variant="h6"
-            sx={{
-              mb: 1,
-            }}
-          >
-            {formatCategory(screeningCategory)}
-          </Typography>
-
-
-          <Typography
-            variant="body2"
-            color="text.secondary"
-          >
-            Detected severity:{" "}
-            <strong>
-              {formatSeverity(
-                screeningSeverity
-              )}
-            </strong>
-          </Typography>
-
-
-          <Divider
-            sx={{
-              my: 3,
-            }}
-          />
-
-
-          {/* ------------------------------------------------
-              DETECTED CATEGORIES
-          ------------------------------------------------ */}
-          {matchedRules.length > 0 && (
-            <Box sx={{ mb: 3 }}>
-
-              <Typography
-                variant="subtitle1"
-                sx={{
-                  fontWeight: 600,
-                  mb: 1.5,
-                }}
-              >
-                Detected Patterns
-              </Typography>
-
-
-              {matchedRules.map(
-                (rule, index) => (
-                  <Box
-                    key={`${rule.category}-${index}`}
-                    sx={{
-                      mb: 1.5,
-                      p: 1.5,
-                      bgcolor: "#f7f8fa",
-                      borderRadius: 1,
-                    }}
-                  >
-
-                    <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        flexWrap: "wrap",
-                        gap: 1,
-                        mb: 0.5,
-                      }}
-                    >
-
-                      <Typography
-                        variant="body1"
-                        sx={{
-                          fontWeight: 600,
-                        }}
-                      >
-                        {formatCategory(
-                          rule.category
-                        )}
-                      </Typography>
-
-
-                      <Chip
-                        label={
-                          formatSeverity(
-                            rule.severity
-                          )
-                        }
-                        size="small"
-                        variant="outlined"
-                      />
-
-                      <Chip
-                        label={`Score ${rule.score}`}
-                        size="small"
-                        variant="outlined"
-                      />
-
-                    </Box>
-
-
-                    {rule.matchedKeywords &&
-                      rule.matchedKeywords.length >
-                        0 && (
-                        <Typography
-                          variant="body2"
-                          color="text.secondary"
-                        >
-                          Matched indicators:{" "}
-                          {rule.matchedKeywords.join(
-                            ", "
-                          )}
-                        </Typography>
-                      )}
-
-                  </Box>
-                )
-              )}
-
-            </Box>
-          )}
-
-
-          {/* ------------------------------------------------
-              RECOMMENDATIONS
-          ------------------------------------------------ */}
-          <Box sx={{ mb: 3 }}>
-
-            <Typography
-              variant="subtitle1"
-              sx={{
-                fontWeight: 600,
-                mb: 1,
-              }}
-            >
-              Suggested Next Steps
-            </Typography>
-
-
-            <Typography
-              variant="body2"
-              color="text.secondary"
-              sx={{
-                mb: 1.5,
-              }}
-            >
-              Based on the detected patterns,
-              here are some suggested next steps:
-            </Typography>
-
-
-            {advice.map(
-              (item, index) => (
-                <Typography
-                  key={index}
-                  variant="body2"
-                  sx={{
-                    mb: 1,
-                    pl: 1,
-                  }}
-                >
-                  • {item}
-                </Typography>
-              )
-            )}
-
-          </Box>
-
-
-          <Divider
-            sx={{
-              my: 3,
-            }}
-          />
-
-
-          {/* ------------------------------------------------
-              CLINICIANS
-          ------------------------------------------------ */}
-          <ClinicianList
-            onBook={setSelectedDoctor}
-            onReviewToggle={
-              toggleReviews
-            }
-            openReviewDoctor={
-              openReviewDoctor
-            }
-          />
-
+          ))}
         </Box>
-      ) : (
-        <Typography
-          color="text.secondary"
-        >
-          No screening result is available yet.
-          Please describe how you are feeling in
-          the chat first.
-        </Typography>
       )}
 
+      <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>Suggested next steps</Typography>
+      {advice.map((a, i) => <Typography key={i} variant="body2" sx={{ mb: 1, pl: 1 }}>• {a}</Typography>)}
+      {topics.length > 0 && (
+        <Box sx={{ mt: 1, display: "flex", gap: 1, flexWrap: "wrap" }}>
+          {topics.map((t) => <Button key={t} size="small" variant="outlined" onClick={() => onOpenGuides(t)}>Self-help: {titleCase(t)}</Button>)}
+        </Box>
+      )}
+
+      <Divider sx={{ my: 3 }} />
+      <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+        {severity === "none" || severity === "low" ? "Professionals you can talk to" : "Recommended clinicians for you"}
+      </Typography>
+      <Typography variant="caption" color="text.secondary">Ranked by fit with your concerns, severity and availability.</Typography>
+      {loadingClinicians ? <Box sx={{ p: 2 }}><CircularProgress size={24} /></Box> : <ClinicianList clinicians={clinicians} onBook={onBook} />}
     </Paper>
   );
 }

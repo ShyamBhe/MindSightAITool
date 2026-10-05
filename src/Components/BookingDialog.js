@@ -1,116 +1,87 @@
-import React, { useState } from "react";
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Typography,
-  Button,
-  Rating,
-  Box,
-  TextField
-} from "@mui/material";
-import { LocalizationProvider, DatePicker, TimePicker } from "@mui/x-date-pickers";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import React, { useEffect, useMemo, useState } from "react";
+import { Dialog, DialogTitle, DialogContent, DialogActions, Typography, Button, Box, TextField, Alert, FormControlLabel, Checkbox, CircularProgress } from "@mui/material";
+import { api } from "../api";
+import { browserTz } from "../format";
 
-export default function BookingDialog({ selectedDoctor, setSelectedDoctor }) {
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [selectedTime, setSelectedTime] = useState(null);
-  const [showSchedule, setShowSchedule] = useState(false);
+export default function BookingDialog({ clinician, onClose, user, onNeedLogin, hasScreening, onBooked }) {
+  const [detail, setDetail] = useState(null);
+  const [slot, setSlot] = useState(null);
+  const [reason, setReason] = useState("");
+  const [share, setShare] = useState(false);
+  const [error, setError] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [done, setDone] = useState(null);
 
-  if (!selectedDoctor) return null;
+  useEffect(() => {
+    setDetail(null); setSlot(null); setError(""); setDone(null); setReason(""); setShare(false);
+    if (clinician) api(`/clinicians/${clinician.id}`).then((d) => setDetail(d.clinician)).catch((e) => setError(e.message));
+  }, [clinician]);
 
-  const handleConfirm = () => {
-    if (selectedDoctor.status === "Online" && !showSchedule) {
-      alert(`✅ Booked immediately with ${selectedDoctor.name}`);
-      setSelectedDoctor(null);
-      return;
-    }
+  const byDay = useMemo(() => {
+    const m = new Map();
+    (detail?.slots || []).forEach((iso) => {
+      const day = new Date(iso).toLocaleDateString([], { weekday: "long", day: "numeric", month: "short" });
+      m.set(day, [...(m.get(day) || []), iso]);
+    });
+    return [...m.entries()];
+  }, [detail]);
 
-    if (!selectedDate || !selectedTime) {
-      alert("Please select both date and time for booking.");
-      return;
-    }
+  if (!clinician) return null;
 
-    const appointment = new Date(
-      selectedDate.getFullYear(),
-      selectedDate.getMonth(),
-      selectedDate.getDate(),
-      selectedTime.getHours(),
-      selectedTime.getMinutes()
-    );
-
-    alert(`✅ Booked appointment on ${appointment.toLocaleString()} with ${selectedDoctor.name}`);
-    setSelectedDoctor(null);
-  };
+  async function confirm() {
+    setBusy(true); setError("");
+    try {
+      const r = await api("/appointments", { method: "POST", body: { clinicianId: clinician.id, startUtc: slot, reason, shareSummary: share, tz: browserTz() } });
+      setDone(r.appointment); onBooked?.();
+    } catch (e) {
+      setError(e.message);
+      if (e.status === 409) api(`/clinicians/${clinician.id}`).then((d) => { setDetail(d.clinician); setSlot(null); });
+    } finally { setBusy(false); }
+  }
 
   return (
-    <Dialog open={!!selectedDoctor} onClose={() => setSelectedDoctor(null)}>
-      <DialogTitle>Book Appointment with {selectedDoctor.name}</DialogTitle>
+    <Dialog open onClose={onClose} fullWidth maxWidth="sm">
+      <DialogTitle>Book with {clinician.name}</DialogTitle>
       <DialogContent>
-        <Typography variant="body2" gutterBottom>{selectedDoctor.specialty}</Typography>
-        <Rating value={selectedDoctor.rating} precision={0.1} readOnly />
-
-        {selectedDoctor.status === "Online" && !showSchedule && (
+        <Typography variant="body2" color="text.secondary" gutterBottom>
+          {clinician.professionLabel} • {clinician.sessionMinutes} min • times shown in your timezone ({browserTz()})
+        </Typography>
+        {done ? (
+          <Alert severity="success" sx={{ mt: 2 }}>
+            Booked for {new Date(done.startUtc).toLocaleString([], { dateStyle: "full", timeStyle: "short" })}. A confirmation was emailed to you and {clinician.name} has been notified.
+          </Alert>
+        ) : !user ? (
+          <Alert severity="info" sx={{ mt: 2 }} action={<Button color="inherit" size="small" onClick={onNeedLogin}>Log in / Sign up</Button>}>Please log in to book an appointment.</Alert>
+        ) : user.role !== "patient" ? (
+          <Alert severity="warning" sx={{ mt: 2 }}>Only patient accounts can book appointments.</Alert>
+        ) : !detail ? <Box sx={{ mt: 2 }}><CircularProgress size={24} /></Box> : byDay.length === 0 ? (
+          <Alert severity="info" sx={{ mt: 2 }}>No openings in the next 2 weeks.</Alert>
+        ) : (
           <Box sx={{ mt: 2 }}>
-            <Typography variant="body2" sx={{ color: "green", mb: 1 }}>
-              Doctor is online and available for immediate booking.
-            </Typography>
-            <Button variant="contained" sx={{ mr: 1 }} onClick={handleConfirm}>
-              Book Now
-            </Button>
-            <Button variant="outlined" onClick={() => setShowSchedule(true)}>
-              Schedule Appointment
-            </Button>
+            {byDay.map(([day, slots]) => (
+              <Box key={day} sx={{ mb: 1.5 }}>
+                <Typography variant="subtitle2">{day}</Typography>
+                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mt: 0.5 }}>
+                  {slots.map((iso) => (
+                    <Button key={iso} size="small" variant={slot === iso ? "contained" : "outlined"} onClick={() => setSlot(iso)}>
+                      {new Date(iso).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                    </Button>
+                  ))}
+                </Box>
+              </Box>
+            ))}
+            <TextField fullWidth multiline minRows={2} sx={{ mt: 2 }} label="What would you like help with? (optional)" value={reason} onChange={(e) => setReason(e.target.value)} inputProps={{ maxLength: 1000 }} />
+            {hasScreening && (
+              <FormControlLabel sx={{ mt: 1 }} control={<Checkbox checked={share} onChange={(e) => setShare(e.target.checked)} />}
+                label="Share a short summary of my screening result with this clinician (your chat messages are never shared)" />
+            )}
           </Box>
         )}
-
-        {showSchedule && (
-          <Box sx={{ mt: 2, display: "flex", gap: 2, flexDirection: "column" }}>
-            <LocalizationProvider dateAdapter={AdapterDateFns}>
-              <DatePicker
-                label="Select Date"
-                value={selectedDate}
-                onChange={(newDate) => setSelectedDate(newDate)}
-                renderInput={(params) => <TextField {...params} fullWidth />}
-              />
-              <TimePicker
-                label="Select Time"
-                value={selectedTime}
-                onChange={(newTime) => setSelectedTime(newTime)}
-                renderInput={(params) => <TextField {...params} fullWidth />}
-              />
-            </LocalizationProvider>
-          </Box>
-        )}
-
-        {selectedDoctor.status === "Offline" && (
-          <Box sx={{ mt: 2, display: "flex", gap: 2, flexDirection: "column" }}>
-            <LocalizationProvider dateAdapter={AdapterDateFns}>
-              <DatePicker
-                label="Select Date"
-                value={selectedDate}
-                onChange={(newDate) => setSelectedDate(newDate)}
-                renderInput={(params) => <TextField {...params} fullWidth />}
-              />
-              <TimePicker
-                label="Select Time"
-                value={selectedTime}
-                onChange={(newTime) => setSelectedTime(newTime)}
-                renderInput={(params) => <TextField {...params} fullWidth />}
-              />
-            </LocalizationProvider>
-          </Box>
-        )}
+        {error && <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>}
       </DialogContent>
-
       <DialogActions>
-        <Button onClick={() => setSelectedDoctor(null)}>Cancel</Button>
-        {showSchedule && (
-          <Button variant="contained" onClick={handleConfirm}>
-            Confirm
-          </Button>
-        )}
+        <Button onClick={onClose}>{done ? "Close" : "Cancel"}</Button>
+        {!done && user?.role === "patient" && <Button variant="contained" disabled={!slot || busy} onClick={confirm}>Confirm booking</Button>}
       </DialogActions>
     </Dialog>
   );

@@ -1,73 +1,56 @@
-import React from "react";
-import {
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
-  Avatar,
-  Badge,
-  Chip,
-  Collapse,
-  Divider,
-  Box,
-  Typography,
-  Button,
-  Tooltip,
-} from "@mui/material";
+import React, { useState } from "react";
+import { List, ListItem, ListItemAvatar, ListItemText, Avatar, Chip, Collapse, Divider, Box, Typography, Button, Rating, Stack } from "@mui/material";
 import EventAvailableIcon from "@mui/icons-material/EventAvailable";
+import { api } from "../api";
+import { fmtDateTime, titleCase } from "../format";
 
-const CLINICIANS = [
-  { name: "Dr. Paavo Salo", specialty: "Clinical Psychologist", rating: 4.9, contact: "paavo.lu@clinic.org", status: "Online", reviews: ["Very compassionate and helpful.", "Helped me manage my anxiety effectively.", "Professional and kind."] },
-  { name: "Dr. Amit Patel", specialty: "Psychiatrist", rating: 4.8, contact: "amit.vunen@mindcare.com", status: "Offline", reviews: ["Expert in mood disorders.", "Explains things clearly.", "Great listener."] },
-  { name: "Dr. Lauri Koivunen", specialty: "Doctor", rating: 4.9, contact: "sarah.nguyen@clinic.org", status: "Online", reviews: ["Very compassionate and helpful.", "Helped me manage my anxiety effectively.", "Professional and kind."] },
-  { name: "Dr. Sarah Nguyen", specialty: "Clinical Psychologist", rating: 4.9, contact: "sarah.nguyen@clinic.org", status: "Online", reviews: ["Very compassionate and helpful.", "Helped me manage my anxiety effectively.", "Professional and kind."] },
-  { name: "Dr. Jukka Laine", specialty: "Psychiatrist", rating: 4.1, contact: "jukka.laine@mindcare.com", status: "Offline", reviews: ["Expert in mood disorders.", "Explains things clearly.", "Great listener."] },
-  { name: "Dr. Lina Roberts", specialty: "Therapist (CBT Specialist)", rating: 4.7, contact: "lina.roberts@wellness.net", status: "Online", reviews: ["CBT sessions were life changing.", "She gives practical strategies.", "Warm and approachable."] }
-];
+export default function ClinicianList({ clinicians, onBook }) {
+  const [openId, setOpenId] = useState(null);
+  const [reviews, setReviews] = useState({});
 
-export default function ClinicianList({ onBook, onReviewToggle, openReviewDoctor }) {
+  async function toggle(c) {
+    if (openId === c.id) return setOpenId(null);
+    setOpenId(c.id);
+    if (!reviews[c.id]) {
+      try { const d = await api(`/clinicians/${c.id}`); setReviews((r) => ({ ...r, [c.id]: d.reviews })); } catch { /* ignore */ }
+    }
+  }
+  if (!clinicians.length) return <Typography color="text.secondary">No clinicians are available yet.</Typography>;
+
   return (
     <List>
-      {CLINICIANS.map((c, i) => (
-        <React.Fragment key={i}>
-          <ListItem
-            sx={{ alignItems: "flex-start" }}
-            secondaryAction={
-              c.status === "Online" ? (
-                <Tooltip title="Book appointment" arrow>
-                  <Button
-                    variant="contained"
-                    size="small"
-                    startIcon={<EventAvailableIcon />}
-                    sx={{ borderRadius: 4, textTransform: "none", ml: 2 }}
-                    onClick={() => onBook(c)}
-                  >
-                    Book
-                  </Button>
-                </Tooltip>
-              ) : (
-                <Chip label="Offline" color="default" size="small" />
-              )
-            }
-          >
-            <ListItemAvatar>
-              <Badge color={c.status === "Online" ? "success" : "error"} variant="dot" overlap="circular">
-                <Avatar>{c.name.charAt(0)}</Avatar>
-              </Badge>
-            </ListItemAvatar>
-            <ListItemText
-              primary={`${c.name} (${c.specialty})`}
-              secondary={`Rating: ${c.rating} • Contact: ${c.contact}`}
-              onClick={() => onReviewToggle(c)}
-              sx={{ cursor: "pointer", pr: 8 }}
-            />
+      {clinicians.map((c) => (
+        <React.Fragment key={c.id}>
+          <ListItem sx={{ alignItems: "flex-start", flexWrap: "wrap", gap: 1 }}>
+            <ListItemAvatar><Avatar>{c.name.replace("Dr. ", "").charAt(0)}</Avatar></ListItemAvatar>
+            <ListItemText sx={{ cursor: "pointer", minWidth: 220, flex: 1 }} onClick={() => toggle(c)}
+              primary={<>{c.name} <Typography component="span" variant="body2" color="text.secondary">({c.professionLabel})</Typography> {c.isDemo && <Chip size="small" label="Demo" sx={{ ml: 1 }} />}</>}
+              secondary={
+                <>
+                  <Stack direction="row" spacing={1} alignItems="center" component="span">
+                    {c.rating ? <><Rating value={c.rating} precision={0.1} size="small" readOnly /><span>{c.rating} ({c.reviewCount})</span></> : <span>No reviews yet</span>}
+                    {c.priceEur != null && <span>• €{c.priceEur} / {c.sessionMinutes} min</span>}
+                  </Stack>
+                  <Box component="span" sx={{ display: "block", mt: 0.5 }}>{c.languages.join(", ")}</Box>
+                  {c.reasons?.length > 0 && <Box component="span" sx={{ display: "block", color: "success.main" }}>✓ {c.reasons.join(" • ")}</Box>}
+                </>
+              } />
+            <Box sx={{ textAlign: "right" }}>
+              {c.nextSlot ? (
+                <>
+                  <Typography variant="caption" color="text.secondary" sx={{ display: "block" }}>Next opening: {fmtDateTime(c.nextSlot)}</Typography>
+                  <Button variant="contained" size="small" startIcon={<EventAvailableIcon />} sx={{ borderRadius: 4, textTransform: "none", mt: 0.5 }} onClick={() => onBook(c)}>Book</Button>
+                </>
+              ) : <Chip label="No openings" size="small" />}
+            </Box>
           </ListItem>
-          <Collapse in={openReviewDoctor?.name === c.name} timeout="auto" unmountOnExit>
-            <Box sx={{ pl: 9, pb: 2 }}>
-              <Typography variant="subtitle2">Patient Reviews:</Typography>
-              {c.reviews.map((r, idx) => (
-                <Typography key={idx} variant="body2" sx={{ color: "text.secondary" }}>• {r}</Typography>
-              ))}
+          <Collapse in={openId === c.id} timeout="auto" unmountOnExit>
+            <Box sx={{ pl: 9, pb: 2, pr: 2 }}>
+              <Typography variant="body2" sx={{ mb: 1 }}>{c.bio}</Typography>
+              <Typography variant="body2" sx={{ mb: 1 }}>Focus: {c.focus.map(titleCase).join(", ")}</Typography>
+              <Typography variant="subtitle2">Patient reviews</Typography>
+              {(reviews[c.id] || []).length === 0 && <Typography variant="body2" color="text.secondary">No written reviews yet.</Typography>}
+              {(reviews[c.id] || []).map((r, i) => <Typography key={i} variant="body2" color="text.secondary">• {r.comment || "(rating only)"} — {r.author}, {r.rating}★</Typography>)}
             </Box>
           </Collapse>
           <Divider />

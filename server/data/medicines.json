@@ -1,0 +1,116 @@
+{
+  "disclaimer": "General educational information only. It does not list doses and is not a recommendation to start, change or stop any medicine. Medicines for mental health must be prescribed and monitored by a doctor. Never stop a prescribed medicine suddenly without talking to your prescriber. Content should be reviewed by a pharmacist or psychiatrist before public launch and checked against your national medicines authority (e.g. Fimea in Finland).",
+  "classes": [
+    {
+      "id": "ssri", "name": "SSRIs (selective serotonin reuptake inhibitors)",
+      "examples": ["sertraline", "escitalopram", "citalopram", "fluoxetine", "paroxetine"],
+      "usedFor": ["Depression", "Anxiety disorders", "Panic disorder", "OCD", "PTSD"],
+      "howItWorks": "Raise the availability of serotonin, a chemical messenger involved in mood and anxiety regulation.",
+      "whatToExpect": "Usually need 2-6 weeks for full effect. Early side effects often fade within the first weeks.",
+      "commonSideEffects": ["Nausea", "Headache", "Sleep changes", "Restlessness at the start", "Sexual side effects"],
+      "importantWarnings": [
+        "In people under 25, tell your doctor right away if suicidal thoughts or agitation increase early in treatment.",
+        "Do not stop suddenly. Discontinuation symptoms (dizziness, 'electric' sensations, irritability) can occur.",
+        "Risk of serotonin syndrome when combined with some medicines or supplements (for example St John's wort, tramadol, triptans, MAO inhibitors). Always tell prescribers and pharmacists everything you take.",
+        "Alcohol can worsen side effects and mood."
+      ]
+    },
+    {
+      "id": "snri", "name": "SNRIs and other newer antidepressants",
+      "examples": ["venlafaxine", "duloxetine", "mirtazapine", "vortioxetine"],
+      "usedFor": ["Depression", "Generalised anxiety", "Some types of long-term pain (SNRIs)"],
+      "howItWorks": "Act on serotonin and noradrenaline (SNRIs), or on other receptors (mirtazapine, vortioxetine).",
+      "whatToExpect": "Similar timeline to SSRIs. Mirtazapine often helps sleep and appetite early on.",
+      "commonSideEffects": ["Nausea", "Dry mouth", "Sweating", "Raised blood pressure (venlafaxine, duloxetine)", "Drowsiness and weight gain (mirtazapine)"],
+      "importantWarnings": [
+        "Blood pressure may need checking with venlafaxine and duloxetine.",
+        "Stopping suddenly can cause withdrawal symptoms; venlafaxine is particularly known for this.",
+        "Same interaction cautions as SSRIs."
+      ]
+    },
+    {
+      "id": "benzodiazepines", "name": "Benzodiazepines",
+      "examples": ["diazepam", "lorazepam", "oxazepam", "alprazolam"],
+      "usedFor": ["Short-term relief of severe anxiety or acute agitation", "Short-term insomnia (limited use)"],
+      "howItWorks": "Enhance the calming GABA system in the brain, giving fast but temporary relief.",
+      "whatToExpect": "Work within an hour but do not treat the cause of anxiety. Intended for short periods only.",
+      "commonSideEffects": ["Drowsiness", "Poor concentration", "Memory problems", "Unsteadiness"],
+      "importantWarnings": [
+        "Tolerance and dependence can develop, sometimes within weeks.",
+        "Dangerous together with alcohol or opioids (risk of breathing problems).",
+        "Can impair driving and machine use.",
+        "Stopping after regular use should be gradual and supervised."
+      ]
+    },
+    {
+      "id": "hydroxyzine", "name": "Hydroxyzine and other sedating antihistamines",
+      "examples": ["hydroxyzine"],
+      "usedFor": ["Short-term relief of anxiety", "Short-term sleep difficulties"],
+      "howItWorks": "An antihistamine with a calming, sedating effect.",
+      "whatToExpect": "Fast acting; not habit-forming in the same way as benzodiazepines, but intended for limited use.",
+      "commonSideEffects": ["Drowsiness", "Dry mouth", "Headache"],
+      "importantWarnings": [
+        "Can affect heart rhythm (QT prolongation) in some people. Tell your doctor about heart conditions or other medicines affecting heart rhythm.",
+        "Avoid alcohol, and be careful driving.",
+        "Older adults are more sensitive to side effects."
+      ]
+    },
+    {
+      "id": "beta-blockers", "name": "Beta-blockers (for physical anxiety symptoms)",
+      "examples": ["propranolol"],
+      "usedFor": ["Physical symptoms of performance anxiety such as shaking and racing heart (a doctor decides if suitable)"],
+      "howItWorks": "Block adrenaline effects on the heart and body; they do not change worrying thoughts.",
+      "whatToExpect": "Used as needed or short-term in selected cases.",
+      "commonSideEffects": ["Tiredness", "Cold hands", "Dizziness", "Slow heart rate"],
+      "importantWarnings": [
+        "Not suitable for people with asthma or certain heart conditions.",
+        "Can hide warning signs of low blood sugar in people with diabetes."
+      ]
+    },
+    {
+      "id": "mood-stabilisers", "name": "Mood stabilisers",
+      "examples": ["lithium", "valproate", "lamotrigine"],
+      "usedFor": ["Bipolar disorder (prevention of mania and depression)"],
+      "howItWorks": "Reduce the extremes of mood swings by several mechanisms.",
+      "whatToExpect": "Long-term treatment under specialist care with regular check-ups.",
+      "commonSideEffects": ["Tremor", "Thirst", "Weight gain", "Stomach upset"],
+      "importantWarnings": [
+        "Lithium requires regular blood tests; dehydration, some painkillers (NSAIDs) and some blood-pressure medicines can raise lithium levels dangerously.",
+        "Valproate must not be used in pregnancy unless there is no alternative; discuss contraception with your doctor.",
+        "Lamotrigine: stop and seek urgent care if a new skin rash appears."
+      ]
+    },
+    {
+      "id": "antipsychotics", "name": "Antipsychotics",
+      "examples": ["aripiprazole", "olanzapine", "quetiapine", "risperidone"],
+      "usedFor": ["Psychosis", "Mania", "Added to antidepressants in some treatment-resistant depression"],
+      "howItWorks": "Mainly affect dopamine (and other) signalling to reduce hallucinations, delusions and severe agitation.",
+      "whatToExpect": "Started and adjusted by a psychiatrist; monitoring of weight, blood sugar and cholesterol is usual.",
+      "commonSideEffects": ["Drowsiness", "Weight gain", "Restlessness or stiffness", "Dry mouth"],
+      "importantWarnings": [
+        "Metabolic changes (weight, blood sugar, cholesterol) should be monitored.",
+        "Do not stop suddenly, since symptoms can return or worsen."
+      ]
+    },
+    {
+      "id": "z-drugs", "name": "'Z-drugs' and sleeping tablets",
+      "examples": ["zolpidem", "zopiclone"],
+      "usedFor": ["Short-term insomnia"],
+      "howItWorks": "Act on the same calming system as benzodiazepines.",
+      "whatToExpect": "Meant for short use (days to a couple of weeks). Habits and therapy (CBT-I) work better in the long term.",
+      "commonSideEffects": ["Morning drowsiness", "Bitter taste (zopiclone)", "Memory problems"],
+      "importantWarnings": [
+        "Can cause sleepwalking or other complex behaviours while not fully awake.",
+        "Dependence and tolerance may develop.",
+        "Do not combine with alcohol."
+      ]
+    }
+  ],
+  "generalSafety": [
+    "Tell every prescriber and pharmacist about all medicines, supplements and herbal products you use.",
+    "Do not share medicines or use someone else's prescription.",
+    "Take medicines as prescribed. If side effects bother you, call your doctor before stopping.",
+    "In pregnancy or breastfeeding, always discuss any medicine with your doctor first.",
+    "If you have thoughts of harming yourself at any time on a medicine, seek help immediately."
+  ]
+}

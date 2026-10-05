@@ -1,0 +1,151 @@
+{
+  "disclaimer": "These guides are general self-help information, not medical advice or a substitute for professional care. If you feel unsafe or are thinking about harming yourself, contact emergency services or a crisis line right away.",
+  "topics": [
+    { "id": "anxiety", "title": "Anxiety", "intro": "Anxiety is the body's alarm system going off when there is no real emergency. These skills calm the alarm and, over time, retrain it." },
+    { "id": "depression", "title": "Low mood & depression", "intro": "Depression makes everything feel heavy and pointless. These skills work by taking very small steps first; action comes before motivation, not after." },
+    { "id": "sleep", "title": "Sleep", "intro": "Sleep problems feed both anxiety and low mood. These habits help most people within a few weeks." },
+    { "id": "stress", "title": "Stress & burnout", "intro": "Long-term overload drains you gradually. Recovery needs rest, boundaries and small restorations, not just a weekend off." }
+  ],
+  "guides": [
+    {
+      "id": "anx-breathing", "topic": "anxiety", "title": "Slow breathing to calm your body", "minutes": 5,
+      "summary": "A quick way to lower physical anxiety symptoms like a racing heart.",
+      "steps": [
+        "Sit comfortably and rest one hand on your belly.",
+        "Breathe in gently through your nose for about 4 seconds, letting your belly rise.",
+        "Breathe out slowly through your mouth or nose for about 6 seconds. A longer out-breath is what settles the body.",
+        "Repeat for 5 minutes. If counting makes you tense, just make each out-breath slower than the in-breath.",
+        "Notice what has changed: heart rate, shoulders, jaw. Practice daily when calm so it works when you need it."
+      ],
+      "tip": "If you feel dizzy, breathe a little less deeply and slow down rather than forcing big breaths."
+    },
+    {
+      "id": "anx-grounding", "topic": "anxiety", "title": "5-4-3-2-1 grounding", "minutes": 3,
+      "summary": "Pull your attention out of worry and back into the present moment.",
+      "steps": [
+        "Name 5 things you can see. Look around slowly and say them in your head or out loud.",
+        "Name 4 things you can feel: your feet on the floor, the chair, your clothes, the air on your skin.",
+        "Name 3 things you can hear.",
+        "Name 2 things you can smell, or 2 smells you like.",
+        "Name 1 thing you can taste, or take one slow sip of water.",
+        "Finish with one slow breath and ask: what is actually happening right now?"
+      ],
+      "tip": "Grounding is also helpful during flashbacks or when you feel detached."
+    },
+    {
+      "id": "anx-panic", "topic": "anxiety", "title": "Getting through a panic attack", "minutes": 6,
+      "summary": "Panic is intense but not dangerous, and it peaks and passes, usually within minutes.",
+      "steps": [
+        "Remind yourself: this is panic. It is frightening but it will pass. It cannot harm you.",
+        "Do not fight it. Fighting the sensations makes them stronger. Let them be there while you do the next steps.",
+        "Slow your out-breath (see the breathing guide). Aim for slower, not deeper.",
+        "Ground yourself: press your feet into the floor and name 5 things you can see.",
+        "Stay where you are if it is safe. Leaving places teaches your brain that the place was dangerous.",
+        "Afterwards, rest and be kind to yourself. Note what was happening before it started, which can reveal triggers."
+      ],
+      "tip": "If chest pain is new, severe, or different from your usual panic symptoms, or you are not sure, get medical help. Panic and heart problems can feel alike."
+    },
+    {
+      "id": "anx-worry-time", "topic": "anxiety", "title": "Worry time and the worry check", "minutes": 10,
+      "summary": "Contain worrying instead of letting it run all day.",
+      "steps": [
+        "Choose a 15-minute 'worry time' each day (not near bedtime).",
+        "When a worry appears at other times, jot a few words on a list and tell yourself: I will think about it at worry time.",
+        "At worry time, go through the list. For each item ask: Is this something I can act on today? If yes, write one small next step. If no, let it go for now.",
+        "Ask: How likely is it, really? What would I tell a friend? How have I coped with similar things before?",
+        "When time is up, stop, and do something absorbing: a walk, a call, a task."
+      ],
+      "tip": "Many worries have faded by worry time. Notice that."
+    },
+    {
+      "id": "anx-facing-fears", "topic": "anxiety", "title": "Facing fears step by step", "minutes": 15,
+      "summary": "Avoidance relieves anxiety briefly but strengthens it. Gradual exposure reverses that.",
+      "steps": [
+        "Pick one thing you avoid (for example using public transport, phone calls, social events).",
+        "Break it into 8-10 steps from easiest to hardest and rate each from 0-100 for how scary it feels.",
+        "Start with a step around 30-40. Stay in it until anxiety drops by about half, or until you've learned the feared outcome did not happen.",
+        "Repeat the same step until it feels manageable, then move up.",
+        "Don't use safety behaviours (checking, reassurance, escaping) if you can avoid them. They keep the fear alive.",
+        "Celebrate each step. Progress is not a straight line."
+      ],
+      "tip": "A therapist trained in CBT can guide this, which is especially helpful for strong phobias, trauma or OCD."
+    },
+    {
+      "id": "dep-small-steps", "topic": "depression", "title": "Behavioural activation: start small", "minutes": 10,
+      "summary": "Doing small things first, even when you feel no desire, gradually lifts mood.",
+      "steps": [
+        "List 10 activities in three groups: things that give pleasure, things that give a sense of achievement, and basic self-care.",
+        "Choose 1-2 very small ones for today (for example a 10-minute walk, a shower, one email, hanging laundry).",
+        "Put them in your calendar at a specific time.",
+        "Do it even if you don't feel like it. Rate your mood 0-10 before and after to see the pattern.",
+        "Add one step a few days later. Keep steps small enough that you can succeed on bad days.",
+        "Don't judge yourself for missed days. Just start again with the smallest version."
+      ],
+      "tip": "Waiting to feel motivated keeps depression in place. Action is what brings motivation back."
+    },
+    {
+      "id": "dep-routine", "topic": "depression", "title": "A gentle daily routine", "minutes": 8,
+      "summary": "A predictable day gives your mind something to hold onto.",
+      "steps": [
+        "Fix a wake-up time and keep it, including weekends (within an hour).",
+        "Get daylight within an hour of waking, even a 10-minute walk outside.",
+        "Eat something at regular times, even small meals.",
+        "Plan one thing with another person each day, such as a message, a call or a coffee.",
+        "Plan one thing you can finish each day, however small.",
+        "Wind down at a regular time, and keep alcohol low, because it worsens mood and sleep."
+      ],
+      "tip": "Movement of any kind counts. Even gentle exercise a few times per week is linked to better mood."
+    },
+    {
+      "id": "dep-thought-record", "topic": "depression", "title": "Catching harsh thoughts", "minutes": 15,
+      "summary": "Depression makes thoughts sound like facts. A thought record helps you test them.",
+      "steps": [
+        "Write the situation: what happened, where, with whom.",
+        "Write the automatic thought (for example 'I'm useless') and how strongly you believe it, 0-100.",
+        "Write the feeling and its intensity (sad 80%).",
+        "List evidence for the thought and evidence against it. Look for things that don't fit.",
+        "Write a more balanced thought, one you'd say to a friend ('I struggled with this task, but I have managed many others').",
+        "Re-rate your belief and your feeling. Even a small drop is progress."
+      ],
+      "tip": "If thoughts of ending your life appear, this guide is not enough on its own. Please reach out to a clinician or crisis line today."
+    },
+    {
+      "id": "dep-reach-out", "topic": "depression", "title": "Reaching out when you'd rather withdraw", "minutes": 5,
+      "summary": "Isolation deepens low mood. Small contacts count.",
+      "steps": [
+        "Pick one person who is usually kind and low-pressure.",
+        "Send a short, honest message: 'Having a rough patch. Could we talk for 10 minutes this week?' You don't need to explain everything.",
+        "If a call feels too much, suggest a walk or doing something together without needing to talk.",
+        "If nobody feels safe to contact, consider a peer support line or booking a session with a clinician on MindSight.",
+        "Notice how you feel afterwards, usually a bit lighter."
+      ],
+      "tip": "You are not a burden. Most people are glad to be asked."
+    },
+    {
+      "id": "sleep-habits", "topic": "sleep", "title": "Sleep habits that work", "minutes": 8,
+      "summary": "Core habits from CBT for insomnia.",
+      "steps": [
+        "Keep a regular rise time every day. It anchors your body clock more than bedtime.",
+        "Only go to bed when sleepy. If you can't sleep after about 20 minutes, get up, do something quiet in dim light, and return when sleepy.",
+        "Keep the bed for sleep. No scrolling, working or worrying in bed.",
+        "Cut caffeine after midday and avoid alcohol close to bedtime.",
+        "Write tomorrow's to-do list earlier in the evening to unload your mind.",
+        "Avoid long daytime naps. If you must, limit to 20 minutes before mid-afternoon."
+      ],
+      "tip": "If sleep problems last more than a few weeks or you snore loudly and feel exhausted, talk to a doctor."
+    },
+    {
+      "id": "stress-recovery", "topic": "stress", "title": "Recovering from overload", "minutes": 10,
+      "summary": "Practical steps when you feel burned out.",
+      "steps": [
+        "List everything on your plate, then mark what must be done, what can wait, and what can be dropped or delegated.",
+        "Say no to one thing this week. Notice what actually happens.",
+        "Schedule recovery as seriously as work: a daily break with no screens, and one evening per week for yourself.",
+        "Move your body gently, and spend time in nature if you can.",
+        "Tell your manager or someone close how things really are. Burnout rarely improves without changes to the load.",
+        "If you feel exhausted most days for weeks, cynical, or unable to function, see a doctor. A sick leave and treatment may be needed."
+      ],
+      "tip": "Burnout is a signal about the situation, not a personal failing."
+    }
+  ]
+}
