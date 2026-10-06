@@ -140,7 +140,8 @@ export default function MentalHealthUI() {
       <AuthDialog open={authOpen} onClose={() => setAuthOpen(false)} onAuthed={onAuthed} />
 
       <Box component="footer" sx={{ textAlign: "center", p: 2, color: "text.secondary", mt: "auto", bgcolor: "#f1f3f4" }}>
-        <Typography variant="caption">MindSight is not a medical device or emergency service and does not provide diagnoses. In an emergency call 112.</Typography>
+        <Typography variant="caption">MindSight is currently initial development phase and is intended for testing and demonstration purposes. The information and features provided by this application are not a substitute for professional medical or mental-health care. For real support, diagnosis, or treatment, please speak with a qualified clinician.
+        © 2026 Shyam Bhetuwal. All rights reserved.</Typography>
       </Box>
     </Box>
   );
