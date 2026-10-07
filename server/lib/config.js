@@ -16,6 +16,8 @@ const path = require('path');
 })();
 
 const env = process.env;
+// Hosting dashboards often keep stray spaces/newlines/quotes when a key is pasted. Clean the ones that must be exact.
+for (const k of ['GEMINI_API_KEY', 'GEMINI_MODEL', 'JWT_SECRET']) if (env[k]) env[k] = env[k].trim().replace(/^["']|["']$/g, '');
 const isProd = env.NODE_ENV === 'production';
 const bool = (v, d) => (v === undefined || v === '' ? d : ['1', 'true', 'yes'].includes(String(v).toLowerCase()));
 

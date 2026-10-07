@@ -30,6 +30,7 @@
     "server": "node server/index.js",
     "dev:server": "node --watch server/index.js",
     "start:prod": "NODE_ENV=production node server/index.js",
+    "dev": "concurrently \"npm start\" \"npm run dev:server\"",
     "test:server": "node --test server/test/api.test.js"
   },
   "eslintConfig": {
@@ -56,5 +57,8 @@
   },
   "optionalDependencies": {
     "nodemailer": "^6.9.16"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.5"
   }
 }

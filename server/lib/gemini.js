@@ -27,6 +27,7 @@ const SCHEMA = {
 
 // Simple circuit breaker: after 3 consecutive failures skip Gemini for 60 s (fast fallback instead of 12 s waits).
 const breaker = { fails: 0, openUntil: 0 };
+const last = { ok: null, at: null, error: null, httpStatus: null };
 
 function buildContents(history, message) {
   const turns = [...history, { from: 'user', text: message }].slice(-20);
@@ -55,7 +56,7 @@ function parseModelJson(text) {
   return { reply: reply.slice(0, 1500), severity, categories, score };
 }
 
-async function callOnce(contents) {
+async function callOnce(contents, lang) {
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), config.gemini.timeoutMs);
   try {
@@ -63,7 +64,7 @@ async function callOnce(contents) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'x-goog-api-key': config.gemini.key },
       body: JSON.stringify({
-        systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
+        systemInstruction: { parts: [{ text: SYSTEM_PROMPT + (lang === 'fi' ? '\nThe app language is Finnish: reply in Finnish unless the user clearly writes in another language.' : '') }] },
         contents,
         generationConfig: { temperature: 0.6, maxOutputTokens: 1024, responseMimeType: 'application/json', responseSchema: SCHEMA },
       }),
@@ -86,15 +87,16 @@ async function callOnce(contents) {
 }
 
 /** Returns {reply, severity, categories, score}. Throws on any failure; the caller falls back to rules. */
-async function chat(history, message) {
+async function chat(history, message, lang) {
   if (!config.gemini.key) throw new Error('GEMINI_API_KEY not configured');
   if (Date.now() < breaker.openUntil) throw new Error('Gemini circuit open');
   const contents = buildContents(history, message);
   let lastErr;
   for (let attempt = 0; attempt < 2; attempt++) {
     try {
-      const out = await callOnce(contents);
+      const out = await callOnce(contents, lang);
       breaker.fails = 0;
+      Object.assign(last, { ok: true, at: new Date().toISOString(), error: null, httpStatus: null });
       return out;
     } catch (e) {
       lastErr = e;
@@ -103,9 +105,12 @@ async function chat(history, message) {
       await new Promise((r) => setTimeout(r, 400));
     }
   }
+  Object.assign(last, { ok: false, at: new Date().toISOString(), error: String(lastErr && lastErr.message || lastErr).slice(0, 200), httpStatus: lastErr && lastErr.status || null });
   if (++breaker.fails >= 3) breaker.openUntil = Date.now() + 60_000;
   throw lastErr;
 }
 
+// Safe to expose publicly: never contains the key itself.
+const status = () => ({ configured: !!config.gemini.key, keyLength: config.gemini.key.length, keyHasWhitespaceOrQuotes: /[\s"']/.test(config.gemini.key), model: config.gemini.model, circuitOpen: Date.now() < breaker.openUntil, last });
 const resetBreaker = () => { breaker.fails = 0; breaker.openUntil = 0; };
-module.exports = { chat, buildContents, parseModelJson, resetBreaker };
+module.exports = { status, chat, buildContents, parseModelJson, resetBreaker };

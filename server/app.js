@@ -25,6 +25,24 @@ const str = (v, max, name) => {
   return t;
 };
 
+const COMMON_PASSWORDS = ['password', 'password1', 'passw0rd', 'qwerty', 'letmein', 'welcome', 'admin', 'iloveyou', '123456', '12345678', 'abc123', 'mindsight', 'demopass'];
+/** Returns a human-readable problem, or '' when the password is acceptable. */
+function passwordProblem(pw, { email = '', name = '' } = {}) {
+  if (pw.length < 12) return 'Password must be at least 12 characters';
+  if (pw.length > 128) return 'Password is too long (max 128)';
+  if (!/[a-z]/.test(pw) || !/[A-Z]/.test(pw)) return 'Password needs both lowercase and uppercase letters';
+  if (!/\d/.test(pw)) return 'Password needs at least one number';
+  if (!/[^A-Za-z0-9]/.test(pw)) return 'Password needs at least one symbol (e.g. ! ? # %)';
+  if (/(.)\1{3,}/.test(pw)) return 'Password must not repeat the same character 4+ times';
+  const low = pw.toLowerCase();
+  if (COMMON_PASSWORDS.some((c) => low.includes(c))) return 'Password is too common or easy to guess';
+  const local = String(email).split('@')[0].toLowerCase();
+  if (local.length >= 4 && low.includes(local)) return 'Password must not contain your email name';
+  const first = String(name).trim().split(/\s+/)[0].toLowerCase();
+  if (first.length >= 4 && low.includes(first)) return 'Password must not contain your name';
+  return '';
+}
+
 function createApp(db, opts = {}) {
   const authLimit = rateLimiter(15, 60_000);
   const chatLimit = rateLimiter(30, 60_000);
@@ -97,7 +115,7 @@ function createApp(db, opts = {}) {
   const routes = [];
   const route = (method, pattern, handler) => routes.push({ method, re: new RegExp(`^${pattern.replace(/:(\w+)/g, '(?<$1>[^/]+)')}$`), handler });
 
-  route('GET', '/api/health', () => ({ ok: true, gemini: !!config.gemini.key, smtp: !!config.smtp.host, demoSeed: config.seedDemo }));
+  route('GET', '/api/health', () => ({ ok: true, gemini: gemini.status(), smtp: !!config.smtp.host, demoSeed: config.seedDemo, autoVerifyClinicians: config.autoVerifyClinicians, visibleClinicians: db.prepare('SELECT COUNT(*) AS n FROM clinician_profiles WHERE verified = 1 AND accepting = 1').get().n }));
 
   // ----- auth -----
   route('POST', '/api/auth/register', async (ctx) => {
@@ -109,7 +127,8 @@ function createApp(db, opts = {}) {
     const role = b.role === 'clinician' ? 'clinician' : 'patient';
     if (!EMAIL_RE.test(email)) throw new HttpError(400, 'Invalid email');
     if (!name) throw new HttpError(400, 'Name is required');
-    if (password.length < 10) throw new HttpError(400, 'Password must be at least 10 characters');
+    const pwProblem = passwordProblem(password, { email, name });
+    if (pwProblem) throw new HttpError(400, pwProblem);
     const profile = role === 'clinician' ? validateProfile(b.profile || {}, { requireLicense: true }) : null;
     if (db.prepare('SELECT 1 FROM users WHERE email = ?').get(email)) throw new HttpError(409, 'An account with this email already exists');
     const id = tx(db, () => {
@@ -151,7 +170,7 @@ function createApp(db, opts = {}) {
 
     // 2. Gemini (reply + independent assessment). Any failure -> fall back to the original rule-based behaviour.
     let llm = null, llmError = null;
-    try { llm = await gemini.chat(history, message); }
+    try { llm = await gemini.chat(history, message, ctx.body.lang === 'fi' ? 'fi' : 'en'); }
     catch (e) { llmError = String(e.message || e); if (config.gemini.key) console.warn('[gemini] falling back to rules:', llmError); }
 
     const result = screening.merge(rules, llm);

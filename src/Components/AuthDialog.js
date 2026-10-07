@@ -1,9 +1,25 @@
 import React, { useState } from "react";
-import { Dialog, DialogTitle, DialogContent, DialogActions, Tabs, Tab, TextField, Button, Alert, ToggleButtonGroup, ToggleButton, MenuItem, Box, Chip, Typography } from "@mui/material";
+import { Dialog, DialogTitle, DialogContent, DialogActions, Tabs, Tab, TextField, Button, Alert, ToggleButtonGroup, ToggleButton, MenuItem, Box, Chip, Typography, LinearProgress } from "@mui/material";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
+import { useI18n } from "../i18n";
 import { api } from "../api";
 import { FOCUS_LABELS, PROFESSIONS, browserTz } from "../format";
 
+// Mirrors the server rules in server/app.js (passwordProblem). The server is the real gatekeeper; this is just live feedback.
+function pwChecks(pw, name, email) {
+  const low = pw.toLowerCase(); const local = email.split("@")[0].toLowerCase(); const first = name.trim().split(/\s+/)[0].toLowerCase();
+  return [
+    ["pw12", pw.length >= 12],
+    ["pwCase", /[a-z]/.test(pw) && /[A-Z]/.test(pw)],
+    ["pwNum", /\d/.test(pw)],
+    ["pwSym", /[^A-Za-z0-9]/.test(pw)],
+    ["pwPersonal", !(local.length >= 4 && low.includes(local)) && !(first.length >= 4 && low.includes(first))],
+  ];
+}
+
 export default function AuthDialog({ open, onClose, onAuthed, initialTab = 0 }) {
+  const { t } = useI18n();
   const [tab, setTab] = useState(initialTab);
   const [role, setRole] = useState("patient");
   const [f, setF] = useState({ name: "", email: "", password: "" });
@@ -13,7 +29,11 @@ export default function AuthDialog({ open, onClose, onAuthed, initialTab = 0 }) 
   const set = (k) => (e) => setF({ ...f, [k]: e.target.value });
   const setProf = (k) => (e) => setP({ ...p, [k]: e.target.value });
 
+  const checks = pwChecks(f.password, f.name, f.email);
+  const pwOk = checks.every(([, ok]) => ok);
+
   async function submit() {
+    if (tab === 1 && !pwOk) { setError(t("pwRules") + " " + checks.filter(([, ok]) => !ok).map(([k]) => t(k)).join("; ")); return; }
     setBusy(true); setError("");
     try {
       const body = tab === 0 ? { email: f.email, password: f.password } : {
@@ -28,18 +48,30 @@ export default function AuthDialog({ open, onClose, onAuthed, initialTab = 0 }) 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
       <DialogTitle>
-        <Tabs value={tab} onChange={(_, v) => { setTab(v); setError(""); }}><Tab label="Log in" /><Tab label="Sign up" /></Tabs>
+        <Tabs value={tab} onChange={(_, v) => { setTab(v); setError(""); }}><Tab label={t("login")} /><Tab label={t("signUp")} /></Tabs>
       </DialogTitle>
       <DialogContent sx={{ display: "flex", flexDirection: "column", gap: 2, pt: "16px !important" }}>
         {tab === 1 && (
           <ToggleButtonGroup exclusive size="small" value={role} onChange={(_, v) => v && setRole(v)}>
-            <ToggleButton value="patient">I'm looking for support</ToggleButton>
-            <ToggleButton value="clinician">I'm a clinician</ToggleButton>
+            <ToggleButton value="patient">{t("imPatient")}</ToggleButton>
+            <ToggleButton value="clinician">{t("imClinician")}</ToggleButton>
           </ToggleButtonGroup>
         )}
-        {tab === 1 && <TextField label="Full name" value={f.name} onChange={set("name")} />}
-        <TextField label="Email" type="email" value={f.email} onChange={set("email")} autoComplete="email" />
-        <TextField label="Password" type="password" value={f.password} onChange={set("password")} helperText={tab === 1 ? "At least 10 characters" : ""} autoComplete={tab === 0 ? "current-password" : "new-password"} />
+        {tab === 1 && <TextField label={t("fullName")} value={f.name} onChange={set("name")} />}
+        <TextField label={t("email")} type="email" value={f.email} onChange={set("email")} autoComplete="email" />
+        <TextField label={t("password")} type="password" value={f.password} onChange={set("password")} autoComplete={tab === 0 ? "current-password" : "new-password"} />
+        {tab === 1 && (
+          <Box>
+            <LinearProgress variant="determinate" value={(checks.filter(([, ok]) => ok).length / checks.length) * 100} color={pwOk ? "success" : "warning"} sx={{ mb: 1, borderRadius: 1 }} />
+            <Typography variant="caption" color="text.secondary">{t("pwRules")}</Typography>
+            {checks.map(([k, ok]) => (
+              <Typography key={k} variant="body2" sx={{ display: "flex", alignItems: "center", gap: 0.5, color: ok ? "success.main" : "text.secondary" }}>
+                {ok ? <CheckCircleIcon fontSize="inherit" /> : <RadioButtonUncheckedIcon fontSize="inherit" />} {t(k)}
+              </Typography>
+            ))}
+            <Typography variant="caption" color="text.secondary" sx={{ display: "block", mt: 0.5 }}>{t("pwTip")}</Typography>
+          </Box>
+        )}
         {tab === 1 && role === "clinician" && (
           <>
             <Typography variant="subtitle2">Professional profile</Typography>
@@ -67,8 +99,8 @@ export default function AuthDialog({ open, onClose, onAuthed, initialTab = 0 }) 
         {error && <Alert severity="error">{error}</Alert>}
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose}>Cancel</Button>
-        <Button variant="contained" onClick={submit} disabled={busy}>{tab === 0 ? "Log in" : "Create account"}</Button>
+        <Button onClick={onClose}>{t("cancel")}</Button>
+        <Button variant="contained" onClick={submit} disabled={busy || (tab === 1 && !pwOk)}>{tab === 0 ? t("login") : t("create")}</Button>
       </DialogActions>
     </Dialog>
   );

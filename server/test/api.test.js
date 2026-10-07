@@ -113,7 +113,7 @@ test('Validation: empty / too long messages and wrong content-type', async () =>
 });
 
 // ---------- accounts, clinicians, matching, booking, email ----------
-const clinicianBody = (over = {}) => ({ role: 'clinician', name: 'Dr. Test Psych', email: 'psych@clinic.test', password: 'a-long-password-1', profile: { profession: 'clinical_psychologist', focus: ['anxiety'], languages: ['English'], licenseNo: 'REG-123', timezone: 'Europe/Helsinki', bio: 'Anxiety specialist', ...over } });
+const clinicianBody = (over = {}) => ({ role: 'clinician', name: 'Dr. Test Psych', email: 'psych@clinic.test', password: 'Tr1cky-Horse-Stapler!', profile: { profession: 'clinical_psychologist', focus: ['anxiety'], languages: ['English'], licenseNo: 'REG-123', timezone: 'Europe/Helsinki', bio: 'Anxiety specialist', ...over } });
 const allDays = [0, 1, 2, 3, 4, 5, 6].map((weekday) => ({ weekday, start: '09:00', end: '17:00' }));
 const psych = jar(), psychiatrist = jar(), patient = jar(), patient2 = jar();
 let psychId, psychiatristId;
@@ -137,13 +137,13 @@ test('Clinician validation: licence required, overlapping windows rejected, pati
   assert.equal((await api('POST', '/api/auth/register', { ...clinicianBody({ licenseNo: '' }), email: 'x@y.test' })).status, 400);
   assert.equal((await api('PUT', '/api/clinician/availability', { windows: [{ weekday: 1, start: '09:00', end: '12:00' }, { weekday: 1, start: '11:00', end: '13:00' }] }, psych)).status, 400);
   assert.equal((await api('PUT', '/api/clinician/availability', { windows: [{ weekday: 1, start: '12:00', end: '09:00' }] }, psych)).status, 400);
-  await api('POST', '/api/auth/register', { role: 'patient', name: 'Pat Ient', email: 'pat@example.test', password: 'a-long-password-1' }, patient);
+  await api('POST', '/api/auth/register', { role: 'patient', name: 'Pat Ient', email: 'pat@example.test', password: 'Tr1cky-Horse-Stapler!' }, patient);
   assert.equal((await api('PUT', '/api/clinician/availability', { windows: [] }, patient)).status, 403);
 });
 
 test('Auth: weak password rejected, duplicate email rejected, wrong password rejected', async () => {
   assert.equal((await api('POST', '/api/auth/register', { role: 'patient', name: 'A', email: 'a@b.test', password: 'short' })).status, 400);
-  assert.equal((await api('POST', '/api/auth/register', { role: 'patient', name: 'Dup', email: 'PAT@example.test', password: 'a-long-password-1' })).status, 409);
+  assert.equal((await api('POST', '/api/auth/register', { role: 'patient', name: 'Dup', email: 'PAT@example.test', password: 'Tr1cky-Horse-Stapler!' })).status, 409);
   assert.equal((await api('POST', '/api/auth/login', { email: 'pat@example.test', password: 'wrong-password-xx' })).status, 401);
   assert.equal((await api('GET', '/api/auth/me', null, patient)).data.user.email, 'pat@example.test');
 });
@@ -182,7 +182,7 @@ test('Booking: requires login, validates slot, emails clinician + patient, block
   assert.match(toClinician.body, /Screening summary/);
   assert.ok(mails.find((m) => m.to_addr === 'pat@example.test' && /confirmed/.test(m.subject)), 'patient must be emailed');
 
-  await api('POST', '/api/auth/register', { role: 'patient', name: 'Second Person', email: 'p2@example.test', password: 'a-long-password-1' }, patient2);
+  await api('POST', '/api/auth/register', { role: 'patient', name: 'Second Person', email: 'p2@example.test', password: 'Tr1cky-Horse-Stapler!' }, patient2);
   assert.equal((await api('POST', '/api/appointments', { clinicianId: psychId, startUtc: slot }, patient2)).status, 409);
   assert.ok(!(await api('GET', `/api/clinicians/${psychId}`)).data.clinician.slots.includes(slot));
 });
@@ -222,7 +222,7 @@ test('Own data: export, consent toggle, delete account removes everything', asyn
   assert.ok(d.screenings.length >= 1 && d.chat.length >= 2);
   assert.equal((await api('PATCH', '/api/me', { researchConsent: true }, patient)).data.user.researchConsent, true);
   assert.equal((await api('DELETE', '/api/me', { password: 'nope-nope-nope' }, patient)).status, 401);
-  assert.equal((await api('DELETE', '/api/me', { password: 'a-long-password-1' }, patient)).status, 200);
+  assert.equal((await api('DELETE', '/api/me', { password: 'Tr1cky-Horse-Stapler!' }, patient)).status, 200);
   assert.equal(db.prepare("SELECT COUNT(*) c FROM screenings s JOIN users u ON u.id=s.user_id WHERE u.email='pat@example.test'").get().c, 0);
   assert.equal(db.prepare("SELECT COUNT(*) c FROM users WHERE email='pat@example.test'").get().c, 0);
 });
